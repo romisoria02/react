@@ -1,15 +1,26 @@
 import ListaTarea from "./ListaTarea";
 import {Form, Button} from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 
 const FormularioTarea = () => {
-    const [tarea, setTarea] = useState('')
-    const [arregloTarea, setArregloTarea] = useState([])
+  //buscar los datos del localstorage
+  const tareasLocalStorage = JSON.parse(localStorage.getItem('arregloTareaKey')) || [];
+    
+  const [tarea, setTarea] = useState("")
+    const [arregloTarea, setArregloTarea] = useState(tareasLocalStorage)
+
+    //ciclo de vidadel componente
+    useEffect(()=>{
+      // console.log('prueba de ciclo de vida del componente')
+      localStorage.setItem('arregloTareaKey', JSON.stringify(arregloTarea))
+    },[arregloTarea])
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // no podemos usar el push con el state
         setArregloTarea([...arregloTarea,tarea])
+        // limpiar el input
         setTarea('')
     };
 
@@ -24,7 +35,7 @@ const FormularioTarea = () => {
         <div>
      <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3 d-flex" controlId="formBasicEmail">
-        <Form.Control 
+   <Form.Control 
         type="text"
          placeholder="Ingrese una tarea" 
          onChange={(e) => setTarea(e.target.value)} 
